@@ -4,18 +4,48 @@
 
 Dockerfile 一般都是一行一个指令 组成,由`#`开头的为注解
 
-Dockerfile分为四部分
+Dockerfile主要分为四部分:
 
 	-  基础镜像
 	-  作者信息
 	-  指令
-	-  容器启动指令大
+	-  容器启动指令
 
-#### Dockerfile指令
+**例如**：
 
+```dockerfile
+# 1、基础镜像部分
+FROM centos
 
+# 2、作者信息
+MAINTAINER huyingxu 
 
-#### 使用dockerfile创建镜像( 手动创建一个tomcat7+jdk1.8的Docker镜像)
+# 3、指令
+ADD index.html /opt
+
+# 4、容器指令
+CMD ["echo","HelloWorld"]
+```
+
+|    指令     |                             说明                             |                     语法                      |
+| :---------: | :----------------------------------------------------------: | :-------------------------------------------: |
+|    FROM     |              用来指定基础镜像,且必须放在第一行               |              FROM ubuntu:latest               |
+| MAINTAINER  |              作者信息,用来说明镜像制作者的信息               |               MAINTAINER <name>               |
+|     RUN     | 将在当前镜像之上的新图层中执行任何任命并提交结果。生成的提交镜像将用于下一步 Dockerfile |                 RUN <command>                 |
+|     EVN     |                      给容器设置环境变量                      |               ENV <key> <value>               |
+|             |                                                              |                                               |
+|     CMD     |                     容器启动时启动的命令                     |             CMD ["run.sh","run"]              |
+|   EXPOSE    |           容器运行时暴露端口给外部,启动容器上加-P            |                 EXPOSE <port>                 |
+|     ADD     | 文件添加到容器中,也可以通过链接添加,COPY的升级版,可以通过URl获取资源添加到容器 |  ADD <src>... <dest>,<br> ADD <url>  <dest>   |
+|    COPY     |                    将主机文件复制到容器中                    |             COPY <src>... <dest>              |
+| ENTRYPOINT  |                    指定容器启动程序或参数                    |                                               |
+|   VOLUME    |       实现挂功能,可将主机目录其他容器目录挂载到容器中        | VOLUME ["/data"]<br>VOLUME /data /rancherdata |
+|   WORKDIR   |                  指定工作目录,可以设置多次                   |                 WORKDIR <src>                 |
+|    USER     |             设定启动容器的用户,可以是用户名、UID             |                                               |
+| HEALTHCHECK |                         健康检查命令                         |                                               |
+|   ONBUILD   |   当当前所创建的镜像作为创建镜像的基础镜像时,所执行的命令    |            ONBUILD ADD . /app/src             |
+
+#### 使用dockerfile创建镜像( 手动创建一个tomcat8+jdk1.8的Docker镜像)
 
 使用docker commit虽然可以创建一个简单的镜像,但不使用我们团队的分享,这时候我们可以通过dockerfile自定义创建我们自己的镜像。首先需要创建一个dockerfile文件,然后进行写入如何创建镜像的命令。
 
@@ -29,8 +59,6 @@ root@localhost:~$ vim dockerfile
 FROM centos:latest
 # 指定作者
 MAINTAINER huyingxu 
-
-FROM centos:latest
 
 # 将jdk添加到/var/lib/
 ADD jdk1.7.0_80/ /var/lib/jdk1.7.0_80/
